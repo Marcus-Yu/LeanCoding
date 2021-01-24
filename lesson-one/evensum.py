@@ -1,26 +1,10 @@
+print("Welcome to my even sum thing!")
+a = int(input ("Please enter a number."))
+if (a/2) == int(a/2):
+  b = a/2
+  print(b)
+else:
+  b = (a-1)/2
 
 
-
-
-
-
-
-
-# starts from 1
-i = 1
-# set variable to sore the sum
-# set it start from 0
-total = 0
-# set up the while loop to go through each number.
-while i <= 100:
-  # check if i is a even number or odd number.
-  if i % 2 == 0:
-    # i is an event, add it to total.
-    total = total + i
-    i = i + 1
-  else:
-    # i is an odd number
-    i = i + 1
-
-# show the total
-print ("Total of event number: ", total)
+print(b*(b+1))
