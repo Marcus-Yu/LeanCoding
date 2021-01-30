@@ -28,4 +28,5 @@ while True:
 
   stdscr.getch()
 
+
 curses.wrapper(window)
