@@ -6,27 +6,30 @@ def window(stdscr):
   sh, sw = stdscr.getmaxyx()
   
   stdscr.nodelay(True)
-  stdscr.timeout(100)
+  stdscr.timeout(5)
 
-  curses.start_colors()
+  curses.start_color()
+  
   curses.use_default_colors()
 
   for i in range(0, curses.COLORS):
-    curses.init_pair(i +1, i -1)
+    curses.init_pair(i +1, i, -1)
     #stdscr.addstr("<(0)>".fornat(i + 1), curses.color_pair(i + 1))
 
-while True:
-  #get a bletter
-  letter=chr(random.randint(33,126))
-  color = random.randint(1,curses.COLORS + 1)
+  while True:
+    #get a bletter
+    userKey = stdscr.getch()
+    if userKey == 27:
+      break
+    letter=chr(random.randint(33,126))
+    color = random.randint(1,curses.COLORS + 1)
+    
 
-  #y-axis x-axis
-  y = random.randint(0,sh - 1 )
-  x = random.randint(0,sw - 1 )
+    #y-axis x-axis
+    y = random.randint(0,sh - 1 )
+    x = random.randint(0,sw - 1 )
 
-  stdscr.addstr(y, x, letter, curses.color_pair(color))
-
-  stdscr.getch()
+    stdscr.addstr(y, x, letter, curses.color_pair(color))
 
 
 curses.wrapper(window)

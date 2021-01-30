@@ -4,7 +4,7 @@ def window(stdscr):
 
   sh, sw = stdscr.getmaxyx()
 
-  msg = "Hello Curses! Typee ESC to exit!"
+  msg = "Hello Curses! Type ESC to exit!"
   stdscr.addstr(sh // 2, sw // 2 - len(msg) // 2, msg )
   
   stdscr.addstr(sh- 1, 0, str(ord('o')))
