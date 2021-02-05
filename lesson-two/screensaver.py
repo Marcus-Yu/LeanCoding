@@ -6,7 +6,7 @@ def window(stdscr):
   sh, sw = stdscr.getmaxyx()
   
   stdscr.nodelay(True)
-  stdscr.timeout(5)
+  stdscr.timeout(888)
 
   curses.start_color()
   
@@ -30,6 +30,5 @@ def window(stdscr):
     x = random.randint(0,sw - 1 )
 
     stdscr.addstr(y, x, letter, curses.color_pair(color))
-
 
 curses.wrapper(window)
