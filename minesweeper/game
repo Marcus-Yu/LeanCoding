@@ -99,9 +99,9 @@ def sweeper(stdscr):
           marcus=[marcus[0]+1,marcus[1]]
         elif key == curses.KEY_LEFT:
           marcus=[marcus[0],marcus[1]-1]
-      stdscr.addstr(field[marcus[0]][marcus[0]][0],field[marcus[0]][marcus[1]][1],chr(9608))
+     
 
-      stephen = marcus 
+      
 
       if marcus[0] < 0:
         marcus[0]=size[0]-1
@@ -111,6 +111,7 @@ def sweeper(stdscr):
         marcus[1] = size[1] - 1
       if marcus[1] > size[1] -1:
         marcus[1] = 0
+      stdscr.addstr(field[marcus[0]][marcus[0]][0],field[marcus[0]][marcus[1]][1],chr(9608))
     stdscr.getch()
 
 curses.wrapper(sweeper)
