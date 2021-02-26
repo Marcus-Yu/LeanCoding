@@ -54,24 +54,55 @@ def initfield(center, size):
    
 
 def paintfield(stdscr, field, size):
-
+    curses.start_color()
+    curses.use_default_colors()
+    for i in range(0, curses.COLORS):
+      curses.init_pair(i +1, i, -1)
     for r in range(0, size[0]):
         for c in range(0, size[1]):
             if field[r][c][2] == -1:
-                stdscr.addstr(field[r][c][0], field[r][c][1], chr(10041))
+                stdscr.addstr(field[r][c][0], field[r][c][1], chr(10041), curses.color_pair(field[r][c][2]+3))
+            
             else:
+              #if field[r][c][2] == 1:
                 #stdscr.addstr(field[r][c][0], field[r][c][1], chr(9608))
-                stdscr.addstr(field[r][c][0], field[r][c][1], str(field[r][c][2]))
+                stdscr.addstr(field[r][c][0], field[r][c][1], str(field[r][c][2]),curses.color_pair(field[r][c][2] + 3))
+
+
+ 
 
 def sweeper(stdscr):
-
+   
     sh, sw = stdscr.getmaxyx()
     center = [sh // 2, sw // 2]
-
-    size = [8, 20]
+    
+    size = [10, 20]
     field = initfield(center, size)
 
     paintfield(stdscr, field, size)
+    marcus=[5,5]
+    while True:
+      stdscr.addstr(field[marcus[0]][marcus[1]][0],field[marcus[0]][marcus[1]][1],chr(9608))
+      key = stdscr.getch()
+      if key == 27:
+        break;
+
+      if key == curses.KEY_UP or key == curses.KEY_RIGHT or key == curses.KEY_DOWN or key == curses.KEY_LEFT:
+        if field[marcus[0]][marcus[1]][2] == -1:
+                stdscr.addstr(field[marcus[0]][marcus[1]][0],field[marcus[0]][marcus[1]][1], chr(10041), curses.color_pair(2))
+        else:
+          stdscr.addstr(field[marcus[0]][marcus[1]][0],field[marcus[0]][marcus[1]][1],str(field[marcus[0]][marcus[1]][2]),curses.color_pair(field[marcus[0]][marcus[1]][2] + 3))
+        
+
+        if key == curses.KEY_UP:
+          marcus=[marcus[0]-1,marcus[1]]
+        elif key == curses.KEY_RIGHT:
+          marcus=[marcus[0],marcus[1]+1]
+        elif key == curses.KEY_DOWN:
+          marcus=[marcus[0]+1,marcus[1]]
+        elif key == curses.KEY_LEFT:
+          marcus=[marcus[0],marcus[1]-1]
+        stdscr.addstr(field[marcus[0]][marcus[1]][0],field[marcus[0]][marcus[1]][1],chr(9608))
 
     stdscr.getch()
 
