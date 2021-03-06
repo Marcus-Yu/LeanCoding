@@ -1,2 +1,2 @@
-lanuage = "python3"
+language = "python3"
 run = "python minesweeper/game.py"
