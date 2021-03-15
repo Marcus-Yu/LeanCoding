@@ -1,2 +1,2 @@
 language = "python"
-run = "python lesson-4/factorial.py"
+run = "python minesweeper/game.py"

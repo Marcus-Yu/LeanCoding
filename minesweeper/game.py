@@ -86,6 +86,13 @@ def paintfield(stdscr, field, size, colors):
         for c in range(0, size[1]):
             paintcell(stdscr, field[r][c], colors)
 
+def printnumber(stdscr,size,cell):
+    for r in range(1, size[1]+1):
+      stdscr.addstr(cell[0]-1,cell[1]+(r-1)*2, str(r))
+
+    for c in range(1, size[0]+1):
+      stdscr.addstr(cell[0]+(c-1),cell[1]-2, str(c))
+
 def colordict():
 
     curses.start_color()
@@ -131,7 +138,7 @@ def paintcell(stdscr, cell, colors, reverse=False, show=False):
         elif cell[3] == "revealed":
             cell_ch = str(cell[2])
             cell_color = colors[str(cell[2])]
-
+        else cell[3] == "blasted"
 
     if reverse:
         cell_color = curses.A_REVERSE
@@ -141,7 +148,7 @@ def paintcell(stdscr, cell, colors, reverse=False, show=False):
 def digcell(cell):
   if cell[3] == "covered":
       if cell[2] < 0:
-        cell[3] == "blasted"
+        cell[3] = "blasted"
       else:
         cell[3] = "revealed"
     
@@ -152,22 +159,15 @@ def flagcell(cell):
     elif cell[3] == "flagged":
         cell[3] = "covered"
 
-def opensurrounding(r,c,size,field,stdscr,colors):
-     for sr in [r - 1, r, r + 1]:
-                for sc in [c - 1, c, c + 1]:
-                    if sr < 0 or sr >= size[0] or sc < 0 or sc >= size[1]:
-                      
-                        continue # skip
-                    elif sr == r and sc == c:
-                        
-                        continue # skip
-                    else:
-                        if field[sr][sc][2] == -1:
-                           #print("game over")
-                            paintcell(stdscr, field[sr][sc], colors,False)
-                        else:
-                          
-                          paintcell(stdscr, field[sr][sc], colors,False)
+def opensurrounding(stdscr, field, r, c, colors):
+  if cell[3] != "revealed":
+    if cell[2] == -1:
+      cell_ch = chr(10041)
+    else:
+      cell_ch = str(cell[2])
+      cell_color = colors[str(cell[2])]
+  else:
+    return
 
 def sweeper(stdscr):
     
@@ -180,11 +180,14 @@ def sweeper(stdscr):
     size = [20, 30]
     field = initfield(center, size)
 
+
     paintfield(stdscr, field, size, colors)
+
+    printnumber(stdscr,size,field[0][0])
 
     r, c = 0, 0
     paintcell(stdscr, field[r][c], colors, True)
-    debugmsg ( stdscr, field, r, c, colors )
+    #debugmsg ( stdscr, field, r, c, colors )
     nr, nc = 0, 0
 
     while True:
@@ -210,7 +213,7 @@ def sweeper(stdscr):
             # f 102
             flagcell(field[r][c])
         elif userkey == 32:
-            opensurrounding(r,c,size,field,stdscr,colors)
+            opensurrounding(field[r][c])
         
         # paint the current cell normally
         paintcell(stdscr, field[r][c], colors)
