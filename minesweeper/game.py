@@ -133,12 +133,14 @@ def paintcell(stdscr, cell, colors, reverse=False, show=False):
         cell_color = colors[str(cell[2])]
     else:
         if cell[3] == "flagged":
-            cell_ch = chr(9873)
-            cell_color = colors["flag"]
+          cell_ch = chr(9873)
+          cell_color = colors["flag"]
         elif cell[3] == "revealed":
-            cell_ch = str(cell[2])
-            cell_color = colors[str(cell[2])]
-        else cell[3] == "blasted"
+          cell_ch = str(cell[2])
+          cell_color = colors[str(cell[2])]
+        elif cell[3] == "blasted":
+          cell_ch = chr(10041)
+          cell_color = curses.color_pair(10)
 
     if reverse:
         cell_color = curses.A_REVERSE
@@ -160,14 +162,27 @@ def flagcell(cell):
         cell[3] = "covered"
 
 def opensurrounding(stdscr, field, r, c, colors):
-  if cell[3] != "revealed":
-    if cell[2] == -1:
-      cell_ch = chr(10041)
-    else:
-      cell_ch = str(cell[2])
-      cell_color = colors[str(cell[2])]
-  else:
+  if field[r][c][3] != "revealed":
     return
+
+  # go through all surrounding cells
+  for sr in [r - 1, r, r + 1]:
+    for sc in [c - 1, c, c + 1]: 
+      # check the bounds
+      # check if the surrounding cell is same with current cell
+      if (sc < 0 or sc > len(field[0]) - 1 or
+      sr < 0 or sr > len(field) - 1):
+        continue
+      elif sr == r and sc == c:
+        continue
+      else:
+        scell = field[sr][sc]
+        if scell[3] == "covered":
+          if scell[2] == -1:
+            scell[3] = "blasted"
+          else:
+            scell[3] = "revealed"
+          paintcell(stdscr, scell, colors)
 
 def sweeper(stdscr):
     
@@ -213,7 +228,8 @@ def sweeper(stdscr):
             # f 102
             flagcell(field[r][c])
         elif userkey == 32:
-            opensurrounding(field[r][c])
+            # 32 is the white space key
+            opensurrounding(stdscr, field, r, c, colors)
         
         # paint the current cell normally
         paintcell(stdscr, field[r][c], colors)
