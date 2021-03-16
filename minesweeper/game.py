@@ -183,6 +183,10 @@ def opensurrounding(stdscr, field, r, c, colors):
           else:
             scell[3] = "revealed"
           paintcell(stdscr, scell, colors)
+          if scell[2] == 0:
+            opensurrounding(stdscr, field, sr, sc, colors)
+        else:
+          continue
 
 def sweeper(stdscr):
     
