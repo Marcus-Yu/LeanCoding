@@ -1,36 +1,37 @@
 import curses
 import random
 import math
+import datetime
 
-def debugmsg(stdscr, field, r, c, colors):
+# def debugmsg(stdscr, field, r, c, colors):
 
     # paint the current cell's values.
-    stdscr.addstr(0,0, " " * 30)
-    stdscr.addstr(0,0, "r = {0}, c = {1} ".format(r,c))
-    stdscr.addstr(0, 0, str(field[r][c]))
-    #print(field[r][c])
-    for sr in [r - 1, r, r + 1]:
-        for sc in [c - 1, c, c + 1]:
+    # stdscr.addstr(0,0, " " * 30)
+    # stdscr.addstr(0,0, "r = {0}, c = {1} ".format(r,c))
+    # stdscr.addstr(0, 0, str(field[r][c]))
+    # print(field[r][c])
+    # for sr in [r - 1, r, r + 1]:
+        # for sc in [c - 1, c, c + 1]:
             # calculate the y and x axis for this cell.
-            y = (sr - (r - 1)) + 1
-            x = (sc - (c - 1)) * 2
-            if (sc < 0 or sc > len(field[0]) - 1 or
-                sr < 0 or sr > len(field) - 1):
-                stdscr.addstr(y, x, ' ')
-                continue
+            # y = (sr - (r - 1)) + 1
+            # x = (sc - (c - 1)) * 2
+            # if (sc < 0 or sc > len(field[0]) - 1 or
+                # sr < 0 or sr > len(field) - 1):
+                # stdscr.addstr(y, x, ' ')
+                # continue
             # surrounding cell
-            scell = field[sr][sc]
-            if scell[2] == -1:
-                ch = chr(10041)
-                color = colors['-1']
-            else:
-                ch = str(scell[2])
-                color = colors[ch]
+            # scell = field[sr][sc]
+            # if scell[2] == -1:
+                # ch = chr(10041)
+                # color = colors['-1']
+            # else:
+                # ch = str(scell[2])
+                # color = colors[ch]
 
-            if sc == c and sr == r:
-                color = curses.A_REVERSE
-                
-            stdscr.addstr(y, x, ch, color)
+            # if sc == c and sr == r:
+                # color = curses.A_REVERSE
+
+            # stdscr.addstr(y, x, ch, color)
 
 def initfield(center, size):
 
@@ -88,10 +89,10 @@ def paintfield(stdscr, field, size, colors):
 
 def printnumber(stdscr,size,cell):
     for r in range(1, size[1]+1):
-      stdscr.addstr(cell[0]-1,cell[1]+(r-1)*2, str(r))
+        stdscr.addstr(cell[0]-1,cell[1]+(r-1)*2, str(r))
 
     for c in range(1, size[0]+1):
-      stdscr.addstr(cell[0]+(c-1),cell[1]-2, str(c))
+        stdscr.addstr(cell[0]+(c-1),cell[1]-2, str(c))
 
 def colordict():
 
@@ -103,19 +104,20 @@ def colordict():
 
     return {
         'cover': curses.color_pair(9),
-        "flag": curses.color_pair(12), # yellow
+        "flag": curses.color_pair(12),  # yellow
         "blasted": curses.color_pair(233),
         "-1": curses.color_pair(10),
         "0": curses.color_pair(1),
-        "1": curses.color_pair(13), # blue
-        "2": curses.color_pair(48), # Green
-        "3": curses.color_pair(10), # red
-        "4": curses.color_pair(52), #
-        "5": curses.color_pair(94), #
-        "6": curses.color_pair(203), #
-        "7": curses.color_pair(90), #
-        "8": curses.color_pair(178), #
+        "1": curses.color_pair(13),  # blue
+        "2": curses.color_pair(48),  # Green
+        "3": curses.color_pair(10),  # red
+        "4": curses.color_pair(52),  #
+        "5": curses.color_pair(94),  #
+        "6": curses.color_pair(203),  #
+        "7": curses.color_pair(90),  #
+        "8": curses.color_pair(178),  #
     }
+
 
 def paintcell(stdscr, cell, colors, reverse=False, show=False):
 
@@ -133,27 +135,30 @@ def paintcell(stdscr, cell, colors, reverse=False, show=False):
         cell_color = colors[str(cell[2])]
     else:
         if cell[3] == "flagged":
-          cell_ch = chr(9873)
-          cell_color = colors["flag"]
+            cell_ch = chr(9873)
+            cell_color = colors["flag"]
         elif cell[3] == "revealed":
-          cell_ch = str(cell[2])
-          cell_color = colors[str(cell[2])]
+            cell_ch = str(cell[2])
+            cell_color = colors[str(cell[2])]
         elif cell[3] == "blasted":
-          cell_ch = chr(10041)
-          cell_color = curses.color_pair(10)
+            cell_ch = chr(10041)
+            cell_color = curses.color_pair(10)
 
     if reverse:
         cell_color = curses.A_REVERSE
 
     stdscr.addstr(cell[0], cell[1], cell_ch, cell_color)
 
+
 def digcell(cell):
-  if cell[3] == "covered":
-      if cell[2] < 0:
-        cell[3] = "blasted"
-      else:
-        cell[3] = "revealed"
-    
+    if cell[3] == "covered":
+        if cell[2] < 0:
+            cell[3] = "blasted"
+        else:
+            cell[3] = "revealed"
+    elif cell[3] == 0:
+        opensurrounding(cell)
+
 def flagcell(cell):
 
     if cell[3] == "covered":
@@ -162,34 +167,34 @@ def flagcell(cell):
         cell[3] = "covered"
 
 def opensurrounding(stdscr, field, r, c, colors):
-  if field[r][c][3] != "revealed":
-    return
+    if field[r][c][3] != "revealed":
+        return
 
-  # go through all surrounding cells
-  for sr in [r - 1, r, r + 1]:
-    for sc in [c - 1, c, c + 1]: 
-      # check the bounds
-      # check if the surrounding cell is same with current cell
-      if (sc < 0 or sc > len(field[0]) - 1 or
-      sr < 0 or sr > len(field) - 1):
-        continue
-      elif sr == r and sc == c:
-        continue
-      else:
-        scell = field[sr][sc]
-        if scell[3] == "covered":
-          if scell[2] == -1:
-            scell[3] = "blasted"
-          else:
-            scell[3] = "revealed"
-          paintcell(stdscr, scell, colors)
-          if scell[2] == 0:
-            opensurrounding(stdscr, field, sr, sc, colors)
-        else:
-          continue
+    # go through all surrounding cells
+    for sr in [r  - 1, r, r + 1]:
+        for sc in [c - 1, c, c + 1]:
+            # check the bounds
+            # check if the surrounding cell is same with current cell
+            if (sc < 0 or sc > len(field[0]) - 1 or
+            sr < 0 or sr > len(field) - 1):
+                continue
+            elif sr == r and sc == c:
+                continue
+            else:
+                scell = field[sr][sc]
+                if scell[3] == "covered":
+                    if scell[2] == -1:
+                        scell[3] = "blasted"
+                    else:
+                        scell[3] = "revealed"
+                    paintcell(stdscr, scell, colors)
+                    if scell[2] == 0:
+                        opensurrounding(stdscr, field, sr, sc, colors)
+                else:
+                    continue
 
 def sweeper(stdscr):
-    
+
     curses.curs_set(0)
 
     sh, sw = stdscr.getmaxyx()
@@ -208,6 +213,11 @@ def sweeper(stdscr):
     paintcell(stdscr, field[r][c], colors, True)
     #debugmsg ( stdscr, field, r, c, colors )
     nr, nc = 0, 0
+    initialtime = datetime.datetime.now()
+    currenttime = datetime.datetime.now()
+    stopwatch = currenttime-initialtime
+    stdscr.addstr(0, field[0][-4][1], str(stopwatch.seconds))
+    userkey = stdscr.getch()
 
     while True:
         userkey = stdscr.getch()
@@ -221,7 +231,7 @@ def sweeper(stdscr):
             if c > 0:
                 nc = c - 1
         elif userkey == curses.KEY_DOWN:
-            if r < size[0] - 1: 
+            if r < size[0] - 1:
                 nr = r + 1
         elif userkey == curses.KEY_UP:
             if r > 0:
@@ -234,12 +244,11 @@ def sweeper(stdscr):
         elif userkey == 32:
             # 32 is the white space key
             opensurrounding(stdscr, field, r, c, colors)
-        
+
         # paint the current cell normally
         paintcell(stdscr, field[r][c], colors)
         # the new cell reverse.
         paintcell(stdscr, field[nr][nc], colors, True)
-        debugmsg(stdscr, field, nr, nc, colors)
         # reset current cell's index.
         r = nr
         c = nc
