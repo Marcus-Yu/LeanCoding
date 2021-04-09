@@ -17,7 +17,7 @@ def window(stdscr):
             x_str = str(x)
             # paint the x axis scale.
             for i in range(0, len(x_str)):
-                stdscr.addstr(3 - i, x, x_str[len(x_str) - 1 - i])
+                stdscr.addstr(4 - i, x, x_str[len(x_str) - 1 - i])
             # paint the measure mark.
             stdscr.addstr(1, x, chr(9516))
     # paint the ending arrow 9658 - ►
