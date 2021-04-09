@@ -213,13 +213,13 @@ def sweeper(stdscr):
     paintcell(stdscr, field[r][c], colors, True)
     #debugmsg ( stdscr, field, r, c, colors )
     nr, nc = 0, 0
+    #while True:
     initialtime = datetime.datetime.now()
-    currenttime = datetime.datetime.now()
-    stopwatch = currenttime-initialtime
-    stdscr.addstr(0, field[0][-4][1], str(stopwatch.seconds))
-    userkey = stdscr.getch()
-
+    
     while True:
+        currenttime = datetime.datetime.now()
+        stopwatch = currenttime-initialtime
+        stdscr.addstr(0, field[0][1][1]-4, str(stopwatch.seconds))
         userkey = stdscr.getch()
         # 113 q
         if userkey in [27, 113]:
