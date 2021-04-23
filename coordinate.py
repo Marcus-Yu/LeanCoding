@@ -18,18 +18,30 @@ def window(stdscr):
             # paint the x axis scale.
             for i in range(0, len(x_str)):
                 stdscr.addstr(4 - i, x, x_str[len(x_str) - 1 - i])
+            for m in range(5,sh):
+                stdscr.addstr(m,x,chr(9475))
+                # stdscr.addstr(4 - i, x, "x")
             # paint the measure mark.
             stdscr.addstr(1, x, chr(9516))
     # paint the ending arrow 9658 - ►
     stdscr.addstr(0, sw - 1, chr(9658))
+    
 
     # paint the y axis scale
     for y in range(1, sh):
-        # │ 9474
-        stdscr.addstr(y, 3, chr(9474))
-        if y % 5 == 0:
-            y_str = str(y)
-            stdscr.addstr(y, 1, y_str)
+      # │ 9474
+      stdscr.addstr(y, 3, chr(9474))
+      if y % 5 == 0:
+          y_str = str(y) 
+          stdscr.addstr(y, 1, y_str)
+          for n in range(5,x):
+            stdscr.addstr(y,n,chr(9473)) 
+
+    for x in range(5, sw):
+      for y in range(5,sh):
+        if x%5==0 and y%5==0:
+          stdscr.addstr(y,x,chr(9535))  
+        
     # paint the ending ▼ 9660
     stdscr.addstr(sh - 1, 3, chr(9660))
 
