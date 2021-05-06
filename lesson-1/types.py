@@ -16,4 +16,4 @@ elif who == "cat":
   print("meow!")
 else:
   print("Idon't know you!")
-print("Press Enter key to exst")
+print("Press Enter key to exist")

@@ -3,7 +3,7 @@ from curses import textpad
 import random
 
 def board(stdscr):
-
+  stdscr.refresh()
   # turn off the cursor1
   curses.curs_set(0)
   # turn on nodelay to make the snake moving by itself.
@@ -32,6 +32,7 @@ def board(stdscr):
   snake = [
     # head is always be the first item.
     [sh // 2, sw // 2 + 1],
+    #curses.color_pair(colornumber)
     # body,
     [sh // 2, sw // 2],
     # tail
@@ -45,6 +46,8 @@ def board(stdscr):
 
   # set the default direction for the snake.
   direction = curses.KEY_RIGHT
+
+  a = 0
 
   while True:
     # in nodelay model the -1 will return after timeout.
@@ -90,7 +93,10 @@ def board(stdscr):
         random.randint(box[0][1] + 1, box[1][1] - 1)
       ]
       stdscr.addstr(food[0], food[1], "*")
-    
+      a = a + 1
+    stdscr.addstr(2, sw // 2 - 15, "W O W! Y O U  A T E  " + str(a)  +  "  F O O D")
+    stdscr.addstr(1, sw//2 - 17, "Use the arrow keys to move and ESC to exit")
+
     if new_head[0] == box [0][0]:
       break;
     if new_head[0] == box [1][0]:
@@ -99,9 +105,19 @@ def board(stdscr):
       break;
     if new_head[1] == box [1][1]:
       break;
-  stdscr.addstr(sh // 2, sw // 2, "GAME OVER")
+    
+  stdscr.addstr(sh // 2, sw // 2, "Press R to restart")
+  stdscr.addstr(sh // 2 -1, sw// 2, "GAME OVER")
   stdscr.nodelay(0)
-  stdscr.getch()
-
-  
-curses.wrapper(board)
+  #print("prepare print")
+  key = stdscr.getch()
+  #stdscr.addstr(2 , 2, "start")
+  if key == 114:
+    for point in snake:
+      stdscr.addstr(point[0], point[1], " ")
+    stdscr.addstr(food[0],food[1], "  ")
+    stdscr.addstr(sh // 2, sw // 2, "                           ")
+    stdscr.addstr(sh // 2 -1, sw// 2, "          ")
+    board(stdscr)
+  key = stdscr.getch()
+curses.wrapper(board)  
